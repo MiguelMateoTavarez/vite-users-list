@@ -1,14 +1,26 @@
+import { loadUsersByPage } from "../use-cases/load-users-by-page";
+
 const state = {
-  currentPath: 0,
+  currentPage: 0,
   users: [],
 };
 
 const loadNextPage = async () => {
-  throw new Error('Not implemented');
+  const users = await loadUsersByPage(state.currentPage + 1);
+
+  if (users.length === 0) return;
+
+  state.currentPage += 1;
+  state.users = users
 };
 
 const loadPreviousPage = async () => {
-  throw new Error('Not implemented');
+  const users = await loadUsersByPage(state.currentPage - 1);
+
+  if (users.length === 0) return;
+
+  state.currentPage -= 1;
+  state.users = users
 };
 
 //TODO: implement
@@ -26,6 +38,15 @@ export default {
   onUserChange,
   reloadPage,
 
-  getUser: () => [...state.users ],
+  /**
+   * 
+   * @returns {User[]}
+   */
+  getUsers: () => [...state.users],
+
+  /**
+   * @returns {Number}
+   
+   */
   getCurrentPage: () => state.currentPage,
 }
