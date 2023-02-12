@@ -1,3 +1,4 @@
+import { localhostUserToModel } from '../mappers/localhost-user.mapper';
 import { userModelToLocalhost } from '../mappers/user-localhost.mapper';
 import { User } from '../models/User';
 
@@ -8,19 +9,20 @@ import { User } from '../models/User';
 export const saveUser = async (userLike) => {
     const user = new User(userLike);
 
-    if (user.firstName || user.lastName) 
+    if (!user.firstName || !user.lastName)
         throw 'First and last name cannot be empty';
 
     const userToSave = userModelToLocalhost(user);
 
+    let userUpdated;
+
     if (user.id) {
-        throw 'No implementada la actualización';
-        return;
+        userUpdated = await updateUser(userToSave);
+    } else {
+        userUpdated = await createUser(userToSave);
     }
 
-    const updateUser = await createUser(userToSave);
-    return updateUser;
-
+    return localhostUserToModel(userUpdated);
 };
 
 /**
@@ -40,5 +42,27 @@ const createUser = async (user) => {
     const newUser = await res.json();
 
     return newUser;
+
+}
+
+/**
+ * 
+ * @param {Like<User>} user 
+ */
+const updateUser = async (user) => {
+
+    const url = `${import.meta.env.VITE_API_URL}/users/${user.id}`;
+
+    const res = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    });
+
+    const updateeUser = await res.json();
+
+    return updateeUser;
 
 }
