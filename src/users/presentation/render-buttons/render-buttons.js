@@ -16,7 +16,7 @@ export const renderButtons = ( element ) => {
     prevButton.disabled = true;
 
     const currentPageLabel = document.createElement( 'label' );
-    currentPageLabel.id = 'Current Page: ';
+    currentPageLabel.id = 'current-page';
     currentPageLabel.innerText = usersStore.getCurrentPage();
 
     element.append( prevButton, currentPageLabel, nextButton );
