@@ -31,7 +31,6 @@ export const hideModal = () => {
  * @param {User} user 
  */
 const setFormValues = (user) => {
-    console.log(user);
     
     form.querySelector('[name="firstName"]').value = user.firstName;
     form.querySelector('[name="lastName"]').value = user.lastName;
@@ -66,10 +65,11 @@ export const renderModal = (element, callback) => {
         e.preventDefault();
 
         const formData = new FormData(form);
-        console.log(formData);
 
         const userLike = {... loadedUser};
+
         for (const [key, value] of formData) {
+            
             if (key === 'balance') {
                 userLike[key] = +value;
                 continue;
@@ -78,6 +78,8 @@ export const renderModal = (element, callback) => {
             if (key === 'isActive') {
                 userLike[key] = value === 'on' ? true : false;
                 continue;
+            } else {
+                userLike['isActive'] = false;
             }
 
             userLike[key] = value;
